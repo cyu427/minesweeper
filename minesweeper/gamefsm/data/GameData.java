@@ -13,7 +13,7 @@ public class GameData {
     private ArrayList<CellData> cellOrder;
 
     private GameData() {
-        this.cellMap = new CellData[row][col];
+        //this.cellMap = new CellData[row][col];
         this.isFlagMode = false;;
         this.cellOrder = new ArrayList<CellData>();
     }
@@ -54,6 +54,10 @@ public class GameData {
 
     public void setCol(int col) {
         this.col = col;
+    }
+
+    public void setCellMap() {
+        this.cellMap = new CellData[row][col];
     }
 
     /**
