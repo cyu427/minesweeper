@@ -124,14 +124,13 @@ public class PlayingGameState implements IGameState {
      * @return int cellCoord --> 方块坐标
      */
     private int[] getCellCoord() {
-        Scanner inputReader = new Scanner(System.in);
 
         int currentX;
         int currentY;
         int[] cellCoord = new int[2];
 
-        currentX = getCoordUserInput(inputReader, "X");
-        currentY = getCoordUserInput(inputReader, "Y");
+        currentX = getCoordUserInput("X");
+        currentY = getCoordUserInput("Y");
 
         cellCoord[0] = currentX;
         cellCoord[1] = currentY;
@@ -145,7 +144,8 @@ public class PlayingGameState implements IGameState {
      * @param coordType 坐标类型，x或y
      * @return int coord --> 用户坐标
     */
-    private int getCoordUserInput(Scanner inputReader, String coordType) {
+    private int getCoordUserInput(String coordType) {
+        Scanner inputReader = new Scanner(System.in);
         String input;
         int coord;
         do {
