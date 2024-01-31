@@ -102,21 +102,43 @@ public class PlayingGameState implements IGameState {
         GameData gameData = GameData.getInstance();
         CellData cell;
 
-        for (int y = 0; y <= gameData.getRow(); y++) {
-            for (int x = 0; x <= gameData.getCol(); x++) {
+        System.out.print(" ");
+
+        for (int y = 0; y <= gameData.getRow() + 1; y++) {
+            for (int x = 0; x <= gameData.getCol() + 1; x++) {
                 
                 if (x == 0 && y == 0) {
-                    System.out.print(" ");
+                    System.out.print("  ");
+                } else if (x == 1 && y == 1) {
+                    System.out.print("+");
+                } else if (y == 1) {
+                    System.out.print("---");
+                } else if (x == 1) {
+                    System.out.print("| ");
                 } else if (y == 0) {
-                    System.out.print(x-1);
+                    if (x <= 10) {
+                        System.out.print("0");
+                    }
+                    System.out.print(x-1 + " ");
+
+    
                 } else if (x == 0) {
-                    System.out.print(y-1);
+                    if (y <= 10) {
+                        System.out.print("0");
+                    }
+                    System.out.print(y-1+ " ");
+
+                    
+                    
                 } else {
-                    cell = gameData.getCell(x-1, y-1);
-                    System.out.print(cell.getCellSymbol());
+                    if (x == 2) {
+                        System.out.print(" ");
+                    }
+                    cell = gameData.getCell(x-2, y-2);
+                    System.out.print(cell.getCellSymbol() + "  ");
                 }
 
-                if (x == gameData.getCol()) {
+                if (x == gameData.getCol() + 1) {
                     System.out.println();
                 }
             }
