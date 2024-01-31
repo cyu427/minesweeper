@@ -13,9 +13,7 @@ public class GameData {
     private ArrayList<CellData> cellOrder;
 
     private GameData() {
-        this.row = 6;
-        this.col = 6;
-        this.cellMap = new CellData[row][col];
+        //this.cellMap = new CellData[row][col];
         this.isFlagMode = false;;
         this.cellOrder = new ArrayList<CellData>();
     }
@@ -41,6 +39,10 @@ public class GameData {
         return row;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
     /**
      * 取得地图x数
      * 
@@ -48,6 +50,14 @@ public class GameData {
      */
     public int getCol() {
         return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
+
+    public void setCellMap() {
+        this.cellMap = new CellData[row][col];
     }
 
     /**

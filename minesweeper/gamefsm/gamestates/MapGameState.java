@@ -17,6 +17,7 @@ public class MapGameState implements IGameState {
     /* 进入状态 */
     @Override
     public void enter() {
+        setMapSize();
         initialiseMap(); // 设置没雷的地图
         setAllMine(getMineNum()); //地图里设雷
         setAllAdjacentIndicator(); // 设置方块周边雷数
@@ -26,6 +27,46 @@ public class MapGameState implements IGameState {
     @Override
     public void next(GameController gameController) {
         gameController.setPlayingGameState(); // 更新到游玩状态
+    }
+
+    private void setMapSize() {
+        GameData gameData = GameData.getInstance();
+        int mapSizeX;
+        int mapSizeY;
+
+        mapSizeX = getMapSize("X");
+        mapSizeY = getMapSize("Y");
+
+        gameData.setRow(mapSizeY);
+        gameData.setCol(mapSizeX);
+        gameData.setCellMap();
+    }
+
+    private int getMapSize(String coordType) {
+        Scanner inputReader = new Scanner(System.in);
+        String input;
+        int coord;
+        do {
+            System.out.print("请输入地图 " +  coordType + " 长度: ");
+            input = inputReader.nextLine().trim();
+        } while (!isMapSizeValid(input));
+
+        coord = Integer.valueOf(input);
+
+        return coord;
+    }
+
+    private boolean isMapSizeValid(String input) {
+        String regex = "^(?:[6-9]|1[0-9]|2[0-9]|30)$";
+        Pattern inputPattern = Pattern.compile(regex);
+        Matcher inputMatcher = inputPattern.matcher(input);
+
+        if (inputMatcher.matches()) {
+            return true;
+        } else {
+            System.out.println("请输入6-30之间的数字");
+            return false;
+        }
     }
 
     /** 
@@ -57,9 +98,12 @@ public class MapGameState implements IGameState {
         CellDataController cellModelController = new CellDataController();
         int x;
         int y;
+        int totalMapSize;
+
+        totalMapSize = gameData.getRow() * gameData.getCol();
         
         // 随机得到雷的位置
-        Set<Integer> mineLocation = new Random().ints(1, 36)
+        Set<Integer> mineLocation = new Random().ints(1, totalMapSize)
         .distinct()
         .limit(mineNum)
         .boxed()
@@ -104,14 +148,16 @@ public class MapGameState implements IGameState {
      * @return 是否输入在1-35之间
      */
     private boolean isInputValid(String input) {
-        String regex = "^(?:[1-9]|[1-2][0-9]|3[0-5])$";
+        GameData gameData = GameData.getInstance();
+        String regex = "^\\d+$";
         Pattern inputPattern = Pattern.compile(regex);
         Matcher inputMatcher = inputPattern.matcher(input);
+        int totalMapSize = gameData.getCol() * gameData.getRow();
 
-        if (inputMatcher.matches()) {
+        if (inputMatcher.matches() && Integer.valueOf(input) < totalMapSize) {
             return true;
         } else {
-            System.out.println("请输入1-35之间的雷数");
+            System.out.println("请输入1-" + (totalMapSize-1) + "之间的雷数");
             return false;
         }
     }

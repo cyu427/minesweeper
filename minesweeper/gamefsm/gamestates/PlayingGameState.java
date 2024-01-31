@@ -76,21 +76,45 @@ public class PlayingGameState implements IGameState {
         System.out.println("3. 返回上一个动作\n");
     }
 
-    /**
-     * 印出地图
-     *  
-     * @param gameData 游戏信息
-     */
     private void printMap() {
         GameData gameData = GameData.getInstance();
         CellData cell;
 
-        for (int y = 0; y < gameData.getRow(); y++) {
-            for (int x = 0; x < gameData.getCol(); x++) {
-                cell = gameData.getCell(x, y);
-                System.out.print(cell.getCellSymbol());
+        System.out.print(" ");
 
-                if (x == gameData.getCol()-1) {
+        for (int y = 0; y <= gameData.getRow() + 1; y++) {
+            for (int x = 0; x <= gameData.getCol() + 1; x++) {
+                
+                if (x == 0 && y == 0) {
+                    System.out.print("  ");
+                } else if (x == 1 && y == 1) {
+                    System.out.print("+");
+                } else if (y == 1) {
+                    System.out.print("---");
+                } else if (x == 1) {
+                    System.out.print("| ");
+                } else if (y == 0) {
+                    if (x <= 10) {
+                        System.out.print("0");
+                    }
+                    System.out.print(x-1 + " ");
+
+    
+                } else if (x == 0) {
+                    if (y <= 10) {
+                        System.out.print("0");
+                    }
+                    System.out.print(y-1+ " ");
+
+                } else {
+                    if (x == 2) {
+                        System.out.print(" ");
+                    }
+                    cell = gameData.getCell(x-2, y-2);
+                    System.out.print(cell.getCellSymbol() + "  ");
+                }
+
+                if (x == gameData.getCol() + 1) {
                     System.out.println();
                 }
             }
@@ -124,14 +148,13 @@ public class PlayingGameState implements IGameState {
      * @return int cellCoord --> 方块坐标
      */
     private int[] getCellCoord() {
-        Scanner inputReader = new Scanner(System.in);
 
         int currentX;
         int currentY;
         int[] cellCoord = new int[2];
 
-        currentX = getCoordUserInput(inputReader, "X");
-        currentY = getCoordUserInput(inputReader, "Y");
+        currentX = getCoordUserInput("X");
+        currentY = getCoordUserInput("Y");
 
         cellCoord[0] = currentX;
         cellCoord[1] = currentY;
@@ -145,7 +168,8 @@ public class PlayingGameState implements IGameState {
      * @param coordType 坐标类型，x或y
      * @return int coord --> 用户坐标
     */
-    private int getCoordUserInput(Scanner inputReader, String coordType) {
+    private int getCoordUserInput(String coordType) {
+        Scanner inputReader = new Scanner(System.in);
         String input;
         int coord;
         do {
