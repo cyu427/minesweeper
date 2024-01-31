@@ -81,7 +81,7 @@ public class PlayingGameState implements IGameState {
      *  
      * @param gameData 游戏信息
      */
-    private void printMap() {
+    /*private void printMap() {
         GameData gameData = GameData.getInstance();
         CellData cell;
 
@@ -91,6 +91,32 @@ public class PlayingGameState implements IGameState {
                 System.out.print(cell.getCellSymbol());
 
                 if (x == gameData.getCol()-1) {
+                    System.out.println();
+                }
+            }
+        }
+        System.out.println();
+    }*/
+
+    private void printMap() {
+        GameData gameData = GameData.getInstance();
+        CellData cell;
+
+        for (int y = 0; y <= gameData.getRow(); y++) {
+            for (int x = 0; x <= gameData.getCol(); x++) {
+                
+                if (x == 0 && y == 0) {
+                    System.out.print(" ");
+                } else if (y == 0) {
+                    System.out.print(x-1);
+                } else if (x == 0) {
+                    System.out.print(y-1);
+                } else {
+                    cell = gameData.getCell(x-1, y-1);
+                    System.out.print(cell.getCellSymbol());
+                }
+
+                if (x == gameData.getCol()) {
                     System.out.println();
                 }
             }
