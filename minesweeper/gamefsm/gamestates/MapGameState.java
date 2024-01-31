@@ -10,16 +10,21 @@ import java.util.stream.Collectors;
 import minesweeper.gamefsm.CellDataController;
 import minesweeper.gamefsm.GameController;
 import minesweeper.gamefsm.data.GameData;
+import minesweeper.gamefsm.difficulty.EasyDifficultyState;
+import minesweeper.gamefsm.difficulty.HardDifficultyState;
+import minesweeper.gamefsm.difficulty.IDifficultyState;
+import minesweeper.gamefsm.difficulty.MediumDifficultyState;
 
 // 地图状态 （设置游戏地图和雷）
 public class MapGameState implements IGameState {
+    private int mineNum;
 
     /* 进入状态 */
     @Override
     public void enter() {
-        setMapSize();
+        chooseDifficulty();
         initialiseMap(); // 设置没雷的地图
-        setAllMine(getMineNum()); //地图里设雷
+        setAllMine(); //地图里设雷
         setAllAdjacentIndicator(); // 设置方块周边雷数
     }
 
@@ -29,44 +34,53 @@ public class MapGameState implements IGameState {
         gameController.setPlayingGameState(); // 更新到游玩状态
     }
 
-    private void setMapSize() {
+    private void chooseDifficulty() {
+        Scanner inputReader = new Scanner(System.in);
+        String userOption;
+        IDifficultyState difficulty = null;
+
         GameData gameData = GameData.getInstance();
-        int mapSizeX;
-        int mapSizeY;
 
-        mapSizeX = getMapSize("X");
-        mapSizeY = getMapSize("Y");
+        do {
+            chooseDifficultyView();
+            userOption = inputReader.nextLine().trim();
 
-        gameData.setRow(mapSizeY);
-        gameData.setCol(mapSizeX);
+            switch (userOption) {
+                case "1":
+                    difficulty = new EasyDifficultyState();
+                    break;
+                case "2":
+                    difficulty = new MediumDifficultyState();
+                    break;
+                case "3":
+                    difficulty = new HardDifficultyState();
+                    break;
+                default:
+                    System.out.println("请输入 1 或 2 或 3");
+                    break;
+            }
+
+        } while (!isDifficultyValid(userOption));
+
+        difficulty.setMapCol();
+        difficulty.setMapRow();
+        mineNum = difficulty.getMineNum();
         gameData.setCellMap();
     }
 
-    private int getMapSize(String coordType) {
-        Scanner inputReader = new Scanner(System.in);
-        String input;
-        int coord;
-        do {
-            System.out.print("请输入地图 " +  coordType + " 长度: ");
-            input = inputReader.nextLine().trim();
-        } while (!isMapSizeValid(input));
-
-        coord = Integer.valueOf(input);
-
-        return coord;
+    private void chooseDifficultyView() {
+        System.out.println("请选择难度：\n");
+        System.out.println("1. 简单: 9x9 10个雷");
+        System.out.println("2. 中级: 16x16 40个雷");
+        System.out.println("3. 高级: 30x16 99个雷\n");
     }
 
-    private boolean isMapSizeValid(String input) {
-        String regex = "^(?:[6-9]|1[0-9]|2[0-9]|30)$";
-        Pattern inputPattern = Pattern.compile(regex);
-        Matcher inputMatcher = inputPattern.matcher(input);
+    private boolean isDifficultyValid(String input) {
+        boolean easyInput = input.equals("1");
+        boolean mediumInput = input.equals("2");
+        boolean hardInput = input.equals("3");
 
-        if (inputMatcher.matches()) {
-            return true;
-        } else {
-            System.out.println("请输入6-30之间的数字");
-            return false;
-        }
+        return (easyInput || mediumInput || hardInput);
     }
 
     /** 
@@ -93,7 +107,7 @@ public class MapGameState implements IGameState {
      * @param gameData 有信息
      * @return 没有
      */
-    private void setAllMine(int mineNum) {
+    private void setAllMine() {
         GameData gameData = GameData.getInstance();
         CellDataController cellModelController = new CellDataController();
         int x;
@@ -121,44 +135,6 @@ public class MapGameState implements IGameState {
             cellModelController.setCellMine();
 
             gameData.setEmptyCellNum(mineNum); // 计算所有空白方块数量
-        }
-    }
-
-    /**
-     * 从用户取得雷数
-     * 
-     * @return int mineNum -> 雷数
-     */
-    private int getMineNum() {
-        Scanner inputReader = new Scanner(System.in);
-        String mineNum; // 雷数
-
-        do {
-            System.out.print("请输入雷数: ");
-            mineNum = inputReader.nextLine().trim();
-        } while (!isInputValid(mineNum));  // 查看输入是否1-35之间
-
-        return Integer.valueOf(mineNum);
-    }
-
-    /**
-     * 查看输入是否1-35之间
-     * 
-     * @param input 用户输入
-     * @return 是否输入在1-35之间
-     */
-    private boolean isInputValid(String input) {
-        GameData gameData = GameData.getInstance();
-        String regex = "^\\d+$";
-        Pattern inputPattern = Pattern.compile(regex);
-        Matcher inputMatcher = inputPattern.matcher(input);
-        int totalMapSize = gameData.getCol() * gameData.getRow();
-
-        if (inputMatcher.matches() && Integer.valueOf(input) < totalMapSize) {
-            return true;
-        } else {
-            System.out.println("请输入1-" + (totalMapSize-1) + "之间的雷数");
-            return false;
         }
     }
 
