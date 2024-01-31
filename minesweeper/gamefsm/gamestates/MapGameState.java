@@ -149,15 +149,15 @@ public class MapGameState implements IGameState {
      */
     private boolean isInputValid(String input) {
         GameData gameData = GameData.getInstance();
-        String regex = "^(?:[1-9]|[1-2][0-9]|3[0-5])$";
+        String regex = "^\\d+$";
         Pattern inputPattern = Pattern.compile(regex);
         Matcher inputMatcher = inputPattern.matcher(input);
         int totalMapSize = gameData.getCol() * gameData.getRow();
 
-        if (inputMatcher.matches()) {
+        if (inputMatcher.matches() && Integer.valueOf(input) < totalMapSize) {
             return true;
         } else {
-            System.out.println("请输入1-" + totalMapSize + "之间的雷数");
+            System.out.println("请输入1-" + (totalMapSize-1) + "之间的雷数");
             return false;
         }
     }
