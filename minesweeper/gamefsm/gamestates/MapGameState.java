@@ -47,9 +47,9 @@ public class MapGameState implements IGameState {
         String input;
         int coord;
         do {
-            System.out.print("请输入地图 " +  coordType + ": ");
+            System.out.print("请输入地图 " +  coordType + " 长度: ");
             input = inputReader.nextLine().trim();
-        } while (!isMapSizeValid(input)); // 查看输入是否在1-6之间
+        } while (!isMapSizeValid(input));
 
         coord = Integer.valueOf(input);
 
