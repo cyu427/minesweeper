@@ -154,7 +154,7 @@ public class MapGameState implements IGameState {
         Matcher inputMatcher = inputPattern.matcher(input);
         int totalMapSize = gameData.getCol() * gameData.getRow();
 
-        if (inputMatcher.matches() && Integer.valueOf(input) < totalMapSize) {
+        if (inputMatcher.matches() && Integer.valueOf(input) < totalMapSize &&  Integer.valueOf(input) > 0) {
             return true;
         } else {
             System.out.println("请输入1-" + (totalMapSize-1) + "之间的雷数");

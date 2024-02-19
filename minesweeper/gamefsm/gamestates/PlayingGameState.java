@@ -149,12 +149,13 @@ public class PlayingGameState implements IGameState {
      */
     private int[] getCellCoord() {
 
+        GameData gameData = GameData.getInstance();
         int currentX;
         int currentY;
         int[] cellCoord = new int[2];
 
-        currentX = getCoordUserInput("X");
-        currentY = getCoordUserInput("Y");
+        currentX = getCoordUserInput("X", gameData.getCol());
+        currentY = getCoordUserInput("Y", gameData.getRow());
 
         cellCoord[0] = currentX;
         cellCoord[1] = currentY;
@@ -168,35 +169,29 @@ public class PlayingGameState implements IGameState {
      * @param coordType 坐标类型，x或y
      * @return int coord --> 用户坐标
     */
-    private int getCoordUserInput(String coordType) {
+    private int getCoordUserInput(String coordType, int mapBoundary) {
         Scanner inputReader = new Scanner(System.in);
         String input;
         int coord;
         do {
             System.out.print("请输入 " +  coordType + ": ");
             input = inputReader.nextLine().trim();
-        } while (!isCellCoordValid(input)); // 查看输入是否在1-6之间
+        } while (!isCellCoordValid(input, mapBoundary));
 
         coord = Integer.valueOf(input)-1;
 
         return coord;
     }
 
-    /**
-     * 查看输入是否在1-6之间 
-     * 
-     * @param input 用户输入
-     * @return 是否输入在1-6之间
-     */
-    private boolean isCellCoordValid(String input) {
-        String regex = "^[1-6]$";
+    private boolean isCellCoordValid(String input, int mapBoundary) {
+        String regex = "^\\d+$";
         Pattern inputPattern = Pattern.compile(regex);
         Matcher inputMatcher = inputPattern.matcher(input);
 
-        if (inputMatcher.matches()) {
+        if (inputMatcher.matches() && Integer.valueOf(input) <= mapBoundary && Integer.valueOf(input) > 0) {
             return true;
         } else {
-            System.out.println("请输入1-6之间的数字");
+            System.out.println("请输入1-" + (mapBoundary) + "之间的雷数");
             return false;
         }
     }
