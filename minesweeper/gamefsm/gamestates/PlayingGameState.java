@@ -149,13 +149,12 @@ public class PlayingGameState implements IGameState {
      */
     private int[] getCellCoord() {
 
-        GameData gameData = GameData.getInstance();
         int currentX;
         int currentY;
         int[] cellCoord = new int[2];
 
-        currentX = getCoordUserInput("X", gameData.getCol());
-        currentY = getCoordUserInput("Y", gameData.getRow());
+        currentX = getCoordUserInput("X");
+        currentY = getCoordUserInput("Y");
 
         cellCoord[0] = currentX;
         cellCoord[1] = currentY;
@@ -169,10 +168,19 @@ public class PlayingGameState implements IGameState {
      * @param coordType 坐标类型，x或y
      * @return int coord --> 用户坐标
     */
-    private int getCoordUserInput(String coordType, int mapBoundary) {
+    private int getCoordUserInput(String coordType) {
+        GameData gameData = GameData.getInstance();
         Scanner inputReader = new Scanner(System.in);
         String input;
         int coord;
+        int mapBoundary = 0;
+
+        if (coordType.equals("X")) {
+            mapBoundary = gameData.getCol();
+        } else if (coordType.equals("Y")) {
+            mapBoundary = gameData.getRow();
+        }
+
         do {
             System.out.print("请输入 " +  coordType + ": ");
             input = inputReader.nextLine().trim();
